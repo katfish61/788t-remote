@@ -70,14 +70,27 @@
 
   // The original Letter Up button becomes "slate up" with a clapperboard icon.
   // It still follows the 788T's Scene Increment Mode (letters or numbers).
-  const CLAPPER = `<svg viewBox="0 0 48 48" width="62%" height="62%" aria-hidden="true">
-    <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round">
-      <rect x="6" y="19" width="36" height="23" rx="2"/>
-      <path d="M6 19 L40 9.5 L41.6 15 L7.6 24.4 Z"/>
-      <path d="M13 17.2 l6.5 -5.4 M22 14.7 l6.5 -5.4 M31 12.2 l6.5 -5.4"/>
+  const CLAPPER = `<svg viewBox="0 0 48 48" width="74%" height="74%" aria-hidden="true">
+  <defs>
+    <clipPath id="cbBar"><rect x="6" y="17" width="36" height="6"/></clipPath>
+    <clipPath id="cbStick"><rect x="6" y="9" width="36" height="6"/></clipPath>
+  </defs>
+  <rect x="6" y="23" width="36" height="19" rx="1.5" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="2.2"/>
+  <g clip-path="url(#cbBar)">
+    <rect x="6" y="17" width="36" height="6" fill="#000"/>
+    <path fill="currentColor" d="M6 17h5l-4 6H2z M17 17h5l-4 6h-5z M28 17h5l-4 6h-5z M39 17h5l-4 6h-5z"/>
+  </g>
+  <rect x="6" y="17" width="36" height="6" fill="none" stroke="currentColor" stroke-width="1.6"/>
+  <g transform="rotate(-16 7 16)">
+    <g clip-path="url(#cbStick)">
+      <rect x="6" y="9" width="36" height="6" fill="#000"/>
+      <path fill="currentColor" d="M10 9h5l-4 6H6z M21 9h5l-4 6h-5z M32 9h5l-4 6h-5z M43 9h5l-4 6h-5z"/>
     </g>
-    <path d="M24 39 V27 M18.5 32 L24 26 L29.5 32" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>`;
+    <rect x="6" y="9" width="36" height="6" fill="none" stroke="currentColor" stroke-width="1.6"/>
+  </g>
+  <circle cx="7.5" cy="16.2" r="1.6" fill="currentColor"/>
+  <path d="M24 38.5V27.5 M19 32 L24 27 L29 32" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
   function styleSlateUp() {
     const b = $("letterUpButton");
     if (!b || b.dataset.clapper) return;

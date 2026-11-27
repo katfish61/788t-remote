@@ -2,7 +2,7 @@
 // The page itself is fetched fresh when the server (the Pi, or the Mac) can be
 // reached within a couple of seconds, so updates show up on the next open;
 // otherwise it opens from the cache, so USB works with no Pi or Wi-Fi at all.
-const CACHE = "788t-app-v77";
+const CACHE = "788t-app-v78";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", (e) => {
