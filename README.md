@@ -4,6 +4,7 @@ A touch-screen remote for the **Sound Devices 788T**, in the style of SD Remote.
 nothing to install from an app store:
 
 - **Android tablet over USB:** plug the tablet into the 788T and use it as a wired remote (Chrome, WebUSB).
+- **Mac (or Windows / Linux PC) over USB:** plug the 788T into the computer and use Chrome or Edge (Web Serial).
 - **Any phone or tablet over Wi-Fi** (iPad, iPhone, Android) through a **Raspberry Pi** plugged into the 788T,
   which makes its own Wi-Fi hotspot.
 
@@ -39,6 +40,19 @@ Wi-Fi links, and the features below on top of it.
 4. Open the app, set the switch next to Connect to **USB**, tap **Connect**, and allow the USB device.
 
 It's served over https, so no Chrome flags are needed.
+
+## Install: Mac (or PC), USB
+1. On the 788T, set **Connection Mode** to **USB/WaveAgent**, and connect its square **USB-B** port to the computer.
+2. The 788T's USB chip is a **Silicon Labs CP2102**. Recent macOS (and Windows / Linux) includes a driver; if the
+   port doesn't show up, install Silicon Labs' free *CP210x VCP* driver.
+3. Open **https://katfish61.github.io/788t-remote/** in **Chrome** or **Edge** (Safari has no Web Serial), then
+   install it as an app: ⋮ → **Cast, save and share → Install page as app…** (or the install icon in the address
+   bar). It opens in its own window and works offline.
+4. **CONNECT** → pick **CP2102 USB to UART Bridge Controller** (on a Mac it may be listed twice; either works,
+   e.g. the *SLAB_USBtoUART* one).
+
+Checked on a MacBook Pro: the 788T's USB serial link answers at its 112,500 baud with either macOS driver. You can
+also open `docs/index.html` from a downloaded copy straight in Chrome, without installing.
 
 ## Install: Raspberry Pi Wi-Fi bridge (any phone or tablet)
 You need a Raspberry Pi 4 (or 5) with Raspberry Pi OS (Bookworm or later) and a USB-A to USB-B cable to the 788T.
