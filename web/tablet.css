@@ -1,0 +1,275 @@
+/* Touch / tablet tweaks layered on top of the original styles */
+html, body { touch-action: manipulation; overscroll-behavior: none; }
+* { -webkit-tap-highlight-color: transparent; }
+button, .transportButton, .takeButtonSceneName { -webkit-user-select: none; user-select: none; }
+input, textarea, [contenteditable] { -webkit-user-select: text; user-select: text; }
+
+/* Per-track ARM buttons (build.py moves arming off the meters onto these). */
+.channel > .meterWell { height: auto !important; flex: 1 1 0; min-height: 0; cursor: default !important; }
+.channel > .armButton {
+  flex: 0 0 auto; height: 11%; margin: 0.4vh 0.3vw; padding: 0;
+  font: bold 2.2vh Arial, sans-serif; letter-spacing: 0.05em;
+  background: #000; color: #777; border: 2px solid #555; border-radius: 6px;
+  touch-action: manipulation; cursor: pointer;
+}
+.channel > .armButton.armed { background: #c00000; color: #fff; border-color: #ff4040; }
+.channel > .armButton:active { transform: scale(0.95); }
+
+/* Narrower screens (iPad is 4:3 to 1.43:1; the S10 is 1.6:1). The original sizes the
+   tabs and the timecode by screen height only, so on an iPad the tabs run off the
+   right edge and the timecode wraps under the transport buttons. Cap them by width
+   too; at 1.6:1 and wider the caps match the original sizes, so the S10 is unchanged. */
+.tabs > button { font-size: min(4vh, 2.5vw) !important; flex: 1 1 auto; min-width: 0; padding-left: 0.3vw; padding-right: 0.3vw; white-space: nowrap; }
+#tc { font-size: min(9vmin, 5.6vw) !important; white-space: nowrap; overflow: hidden; min-width: 0; }
+#transportButtons, #liveStats { flex-shrink: 0; }
+
+/* SD Remote-style layout (tablet.js moves the elements). The top info bar
+   (take cards + timecode) and the transport column stay on screen on every
+   tab; tab content sits in the space between them. --navH / --barH are the
+   measured heights of the tab bar and the bottom status bar (tablet.js). */
+:root { --sdColW: min(8vw, 12vh); --sdHeadH: 21vh; --navH: 6vh; --barH: 6.5vh; }
+body.sdPersistent #sdHeader {
+  display: flex; flex-direction: column; gap: 0.6vh; height: var(--sdHeadH); box-sizing: border-box;
+  margin: 0.6vh calc(var(--sdColW) + 1.4vw) 0.4vh 6px; min-width: 0;
+}
+body.sdPersistent .tab {
+  margin-right: calc(var(--sdColW) + 0.8vw);
+  height: calc(100vh - var(--navH) - var(--sdHeadH) - 1vh - var(--barH)) !important;
+  overflow-y: auto; overflow-x: hidden; box-sizing: border-box;
+}
+body.sdPersistent #home.sdLayout.active {
+  display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); overflow: hidden;
+}
+#sdHeader > #sdMix { flex: 1 1 auto; min-height: 0; }
+#home.sdLayout > #transport, #home.sdLayout > #buttonBar { display: none !important; }
+#home.sdLayout > #sdMix { grid-row: 1; min-width: 0; }
+#home.sdLayout > #meterView { grid-row: 1; height: auto !important; min-height: 0; box-sizing: border-box; }
+
+#sdTop { display: flex; gap: 0.6vw; flex: 0 0 14vh; min-width: 0; height: 14vh; }
+#sdTop > .takeButtonSceneName { flex: 1 1 0; width: auto !important; height: 100% !important; min-width: 0; }
+#sdCentre { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; padding: 0 0.6vw; }
+#sdInfo { display: flex; gap: 1.6vw; }
+#sdInfo > .livestat { width: auto !important; font-size: 2vh !important; color: #bbb; }
+#sdCentre > #tc { width: auto !important; font-size: min(8.5vh, 5.6vw) !important; line-height: 1; white-space: nowrap; }
+#sdCentre > #liveATime { width: auto !important; font-size: 2vh !important; color: #bbb; }
+
+#sdMix { display: flex; flex-direction: column; justify-content: center; gap: 0.5vh; position: relative; padding-left: 0.3vw; }
+.sdMixRow { display: flex; align-items: center; gap: 0.5vw; height: 1.9vh; }
+.sdMixRow { height: 2.6vh !important; }
+.sdMixLabel { flex: 0 0 3.2vw; height: 100%; padding: 0; font: bold 1.8vh Arial, sans-serif; color: #777; background: #000;
+  border: 2px solid #555; border-radius: 5px; text-align: center; cursor: pointer; touch-action: manipulation; }
+.sdMixLabel.armed { color: #fff !important; background: #c00000 !important; border-color: #ff4040 !important; }
+.sdMixLabel:active { transform: scale(0.95); }
+.sdMixBar { position: relative; flex: 1 1 auto; height: 100%; background: #000; border: 1px solid #333; overflow: hidden; }
+.sdMixFill { position: absolute; inset: 0; clip-path: inset(0 100% 0 0);
+  background: linear-gradient(to right, #6fbf3a 0%, #6fbf3a 76%, #f0a030 76%, #f0a030 94%, #e02020 94%); }
+.sdMixPeak { position: absolute; top: 0; bottom: 0; width: 2px; left: -4px; background: #fff; }
+.sdMixScale { position: relative; height: 1.6vh; margin-left: calc(3.2vw + 0.5vw); font: 1.3vh Arial, sans-serif; color: #888; }
+.sdMixScale > span { position: absolute; transform: translateX(-50%); }
+
+body.sdPersistent > #transportButtons {
+  position: fixed; right: 0.6vw; top: calc(var(--navH) + 0.6vh); bottom: calc(var(--barH) + 0.6vh);
+  width: var(--sdColW) !important; display: flex; flex-direction: column; align-items: center; gap: 1.4vh;
+  padding: 0.5vh 0; box-sizing: border-box; z-index: 60;
+}
+#transportButtons .sdRound {
+  flex: 0 0 auto; width: min(7vw, 10.5vh) !important; height: min(7vw, 10.5vh) !important; padding: 0;
+  border-radius: 50% !important; border-width: 3px !important; font-size: 4.2vh !important; line-height: 1;
+  display: flex; align-items: center; justify-content: center; box-sizing: border-box;
+}
+#transportButtons #falseStartButton, #transportButtons #letterUpButton, #transportButtons #toneButton { border: 3px solid #888 !important; color: #ddd; background: #000; }
+#transportButtons #letterUpButton { font-size: 2.6vh !important; }
+#transportButtons #letterUpButton svg { display: block; }
+#transportButtons #toneButton { font-size: 3.4vh !important; }
+#transportButtons .sdSpacer { flex: 1 1 auto; }
+/* Tracks 1-2 (L/R) are shown as the horizontal L/R meters, so not as vertical ones. */
+#home.sdLayout .channel[id="meter1"], #home.sdLayout .channel[id="meter2"],
+#home.sdLayout .channel[id$="_meter1"], #home.sdLayout .channel[id$="_meter2"] { display: none !important; }
+#home.sdLayout #meterView .channel { flex: 1 1 0; width: auto !important; min-width: 0; }
+
+/* USB | Wi-Fi switch next to Connect. */
+#linkSwitch { display: inline-flex; margin-right: 0.8vw; border: 2px solid #888; border-radius: 8px; overflow: hidden; flex: 0 0 auto; }
+#linkSwitch button { font: bold 1.9vh Arial, sans-serif; padding: 0.6vh 1vw; background: #000; color: #888; border: none; cursor: pointer; touch-action: manipulation; }
+#linkSwitch button + button { border-left: 2px solid #888; }
+#linkSwitch button.active { background: #0a5; color: #fff; }
+
+/* Inline Current / Next take cards (SD Remote / CL-WIFI style). */
+#sdHiddenTakeButtons { display: none !important; }
+.sdTakeCard {
+  flex: 1 1 0; min-width: 0; height: 100%; box-sizing: border-box; display: flex; flex-direction: column;
+  justify-content: space-evenly; padding: 0.4vh 0.6vw; background: #000; border: 2px solid #ddd; border-radius: 10px;
+}
+.sdTakeCard.error { border-color: #c00; }
+.sdTakeCard.saving { border-color: #fc0; }
+.sdCardTitle { font: bold 1.4vh Arial, sans-serif; color: #888; letter-spacing: 0.1em; }
+.sdCardRow { display: flex; align-items: center; gap: 0.5vw; min-width: 0; }
+.sdCardRow > span { flex: 0 0 4.6vw; font: 1.8vh Arial, sans-serif; color: #aaa; }
+.sdCardRow > input {
+  flex: 1 1 auto; min-width: 0; height: 3vh; box-sizing: border-box; padding: 0 0.5vw;
+  font: bold 2.2vh Arial, sans-serif; color: #fff; background: #1c1c1c; border: 1px solid #444; border-radius: 4px;
+}
+.sdCardRow > input:focus { outline: none; border-color: #0a5; background: #062; }
+.sdCardRow > input[data-field="notes"] { font-weight: normal; font-size: 1.9vh; }
+
+/* ROUTING tab */
+.tabs > button { font-size: min(4vh, 2.2vw) !important; }
+#rtBar { display: flex; align-items: center; gap: 1.2vw; margin: 0.6vh 0 1vh; flex-wrap: wrap; }
+.rtTitle { font: bold 2.4vh Arial, sans-serif; color: #ddd; }
+#rtMode { display: inline-flex; border: 2px solid #888; border-radius: 8px; overflow: hidden; }
+#rtMode button { font: bold 2vh Arial, sans-serif; padding: 0.7vh 1.2vw; background: #000; color: #888; border: none; }
+#rtMode button + button { border-left: 2px solid #888; }
+#rtMode button.active { background: #0a5; color: #fff; }
+#rtReload { font: bold 2vh Arial, sans-serif; padding: 0.7vh 1.2vw; background: #000; color: #fff; border: 2px solid #888; border-radius: 8px; }
+#rtHint { font: 1.8vh Arial, sans-serif; color: #999; }
+#rtGrid { display: grid; grid-template-columns: 6vw repeat(12, minmax(0, 1fr)); gap: 0.6vh 0.5vw; position: relative; }
+.rtHead { text-align: center; font: bold 2.2vh Arial, sans-serif; color: #ddd; padding-bottom: 0.3vh; }
+.rtRowHead { display: flex; align-items: center; font: bold 2.1vh Arial, sans-serif; color: #ddd; }
+.rtCell { height: 6.2vh; border-radius: 8px; border: 2px solid #444; background: #151515; color: #000;
+  font: bold 1.7vh Arial, sans-serif; touch-action: manipulation; cursor: pointer; }
+.rtCell.post { background: #e8e8e8; border-color: #fff; }
+.rtCell.pre { background: #f0a030; border-color: #ffc060; }
+.rtCell.unknown { opacity: 0.35; }
+.rtCell.busy { outline: 3px solid #0a5; }
+.rtCell:active { transform: scale(0.94); }
+.rtEmpty { position: absolute; inset: 30% 0 auto 0; text-align: center; font: 2.4vh Arial, sans-serif; color: #ccc; }
+/* Routing now lives on the ROUTING tab: hide the Inputs table's Route To Tracks and
+   Pre/Post columns (columns 12 and 13). The buttons stay in the page, hidden. */
+body.sdPersistent .inputMatrix th:nth-child(12), body.sdPersistent .inputMatrix th:nth-child(13),
+body.sdPersistent .inputMatrix td:nth-child(12), body.sdPersistent .inputMatrix td:nth-child(13) { display: none !important; }
+
+/* SD Remote-style channel strips on the home page. */
+#home.sdLayout #meterView .meterBankChannels { justify-content: space-evenly; }
+#home.sdLayout #meterView .channel { flex: 0 1 6.6vw !important; max-width: 6.6vw; min-width: 0; }
+.channel > .sdTrackName {
+  flex: 0 0 auto; height: 3.6vh; margin: 0 0.2vw 0.5vh; box-sizing: border-box; padding: 0 0.2vw; min-width: 0;
+  font: bold 1.7vh Arial, sans-serif; text-align: center; color: #fff; background: #1c1c1c;
+  border: 1px solid #555; border-radius: 4px;
+}
+.channel > .sdTrackName:focus { outline: none; border-color: #0a5; background: #062; }
+.channel > .sdTrackName.saving { border-color: #fc0; }
+.channel > .muteButton {
+  flex: 0 0 auto; height: 6%; margin: 0 0.2vw 0.4vh; padding: 0; font: bold 1.7vh Arial, sans-serif;
+  background: #000; color: #777; border: 2px solid #555; border-radius: 6px; touch-action: manipulation;
+}
+.channel > .muteButton.muted { background: #d4a000; color: #000; border-color: #ffd23f; }
+.channel > .muteButton.blank { visibility: hidden; }
+.channel > .armButton { height: 6% !important; }
+/* Bottom box: just the channel letter; the name is edited in the top box. */
+body.sdPersistent #home .channel > .trackButton { pointer-events: auto !important; cursor: pointer; height: auto !important; flex: 0 0 4.4vh; }
+body.sdPersistent #home .channel > .trackButton:active { background: #333; }
+body.sdPersistent #home .channel > .trackButton .trackButtonLine2 { display: none; }
+/* Input mute is on the home page now (MUTE under ARM): hide the Inputs table's Mute column (8). */
+body.sdPersistent .inputMatrix th:nth-child(8), body.sdPersistent .inputMatrix td:nth-child(8) { display: none !important; }
+
+/* Fat channel (opened from a strip's letter box). Sits over the tab content; the top bar and
+   transport stay visible. */
+#fcWin {
+  display: none; position: fixed; z-index: 500; box-sizing: border-box;
+  left: 6px; right: calc(var(--sdColW) + 1.4vw);
+  top: calc(var(--navH) + var(--sdHeadH) + 1vh); bottom: calc(var(--barH) + 0.6vh);
+  background: #1a1a1a; border: 2px solid #888; border-radius: 12px; padding: 0.8vh 1vw;
+  flex-direction: column; gap: 0.8vh; color: #ddd; font-family: Arial, sans-serif; overflow: hidden;
+}
+#fcWin.open { display: flex; }
+.fcHead { display: flex; align-items: center; gap: 1vw; flex: 0 0 auto; }
+.fcTitle { font: bold 2.6vh Arial, sans-serif; color: #fff; background: #b00000; border-radius: 6px; padding: 0.4vh 1vw; }
+#fcNote { font: 1.8vh Arial, sans-serif; color: #fc6; }
+.fcClose { margin-left: auto; font: bold 2.4vh Arial, sans-serif; padding: 0.3vh 1.2vw; background: #000; color: #fff; border: 2px solid #777; border-radius: 8px; }
+.fcMain { flex: 1 1 auto; min-height: 0; display: flex; gap: 1vw; overflow-y: auto; }
+.fcCol { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; }
+.fcEq { flex: 1.1 1 0; background: #111; border: 1px solid #333; border-radius: 10px; padding: 0.4vh 0.8vw; }
+.fcEqHead { display: flex; align-items: center; justify-content: space-between; font: bold 2vh Arial, sans-serif; color: #9cf; }
+.fcRow { display: flex; align-items: center; gap: 0.8vw; min-height: 5.6vh; border-bottom: 1px solid #2c2c2c; }
+.fcLab { flex: 0 0 6.5vw; font: 1.8vh Arial, sans-serif; color: #bbb; }
+.fcLab i, .fcEqHead i { font-size: 1.3vh; color: #888; font-style: normal; border: 1px solid #555; border-radius: 3px; padding: 0 0.3vw; margin-left: 0.3vw; }
+.fcVal { flex: 0 0 6vw; text-align: right; font: bold 1.9vh Arial, sans-serif; color: #fff; }
+.fcHint { font: 1.4vh Arial, sans-serif; color: #888; }
+.fcText { flex: 1 1 auto; min-width: 0; height: 4vh; font: bold 2vh Arial, sans-serif; color: #fff; background: #222; border: 1px solid #555; border-radius: 5px; padding: 0 0.6vw; }
+.fcText:focus { outline: none; border-color: #0a5; }
+.fcSlider { flex: 1 1 auto; min-width: 0; height: 4.4vh; -webkit-appearance: none; appearance: none; background: transparent; touch-action: none; }
+.fcSlider::-webkit-slider-runnable-track { height: 0.6vh; background: #555; border-radius: 3px; }
+.fcSlider::-webkit-slider-thumb { -webkit-appearance: none; width: 3.6vh; height: 3.6vh; margin-top: -1.5vh; border-radius: 50%; background: #eee; border: 2px solid #fff; }
+.fcSlider::-moz-range-track { height: 0.6vh; background: #555; border-radius: 3px; }
+.fcSlider::-moz-range-thumb { width: 3.6vh; height: 3.6vh; border-radius: 50%; background: #eee; border: 2px solid #fff; }
+.fcSw { flex: 0 0 auto; width: 6.4vh; height: 3.6vh; border-radius: 1.8vh; background: #444; border: none; position: relative; margin-left: auto; padding: 0; }
+.fcSw > span { position: absolute; top: 0.3vh; left: 0.3vh; width: 3vh; height: 3vh; border-radius: 50%; background: #fff; transition: left 0.12s; }
+.fcSw.on { background: #f0a030; }
+.fcSw.on > span { left: 3.1vh; }
+.fcSw.mute.on { background: #d4a000; }
+.fcSeg { display: inline-flex; border: 2px solid #777; border-radius: 7px; overflow: hidden; }
+.fcSeg button { font: bold 1.7vh Arial, sans-serif; padding: 0.6vh 0.6vw; white-space: nowrap; background: #000; color: #999; border: none; }
+.fcSeg button + button { border-left: 2px solid #777; }
+.fcSeg button.on { background: #1d6fd1; color: #fff; }
+.fcBtn { font: bold 1.8vh Arial, sans-serif; padding: 0.6vh 1.4vw; border-radius: 7px; border: 2px solid #555; background: #000; color: #888; }
+.fcBtn.pre { background: #f0a030; color: #000; border-color: #ffc060; }
+.fcBtn.post { background: #e8e8e8; color: #000; border-color: #fff; }
+#fcCurve { width: 100%; height: 12vh; flex: 0 0 auto; border-radius: 6px; margin: 0.4vh 0; }
+#fcWin.eqOff .fcEq .fcSlider { opacity: 0.45; }
+.fcFeeds { display: flex; flex-wrap: wrap; gap: 0.8vw; margin-top: 1vh; }
+.fcFeeds button { font: bold 2vh Arial, sans-serif; padding: 1.2vh 1.6vw; background: #000; color: #888; border: 2px solid #555; border-radius: 8px; }
+.fcFeeds button.on { background: #e8e8e8; color: #000; border-color: #fff; }
+.fcAll { flex: 0 0 auto; font: 1.8vh Arial, sans-serif; color: #bbb; }
+.fcAll summary { cursor: pointer; padding: 0.3vh 0; }
+.fcAll .inputGlobalSettings { display: flex; flex-wrap: wrap; gap: 0.6vh 1vw; padding: 0.6vh 0; }
+.fcAll .inputGlobalSettings label { display: flex; flex-direction: column; font-size: 1.5vh; color: #999; }
+.fcTabs { flex: 0 0 auto; display: flex; gap: 0.4vw; }
+.fcTabs button { flex: 1 1 0; font: bold 1.9vh Arial, sans-serif; padding: 0.8vh 0; background: #2a2a2a; color: #ccc; border: 1px solid #444; border-radius: 6px; }
+.fcTabs button.on { background: #fff; color: #000; }
+
+.fcHeadName { flex: 0 1 18vw; height: 3.8vh; }
+.fcFeedRow { flex: 0 0 auto; display: flex; align-items: center; gap: 0.8vw; flex-wrap: wrap; }
+.fcFeedRow .fcFeeds { margin-top: 0; gap: 0.5vw; }
+.fcFeedRow .fcFeeds button { padding: 0.6vh 1vw; font-size: 1.8vh; }
+#fc_editWrap { display: inline-flex; align-items: center; gap: 0.6vw; margin-left: auto; }
+.fcEmpty { flex: 1 1 auto; display: flex; align-items: center; justify-content: center; font: 2.2vh Arial, sans-serif; color: #aaa; }
+/* Centre the CURRENT / NEXT titles on the take cards. */
+.sdCardTitle { text-align: center; }
+/* Sound Report sheet sits in the content area (top bar, L/R and transport stay visible);
+   leave it by tapping another tab, so its Close button is hidden. */
+body.sdPersistent #srPanel {
+  inset: auto; left: 6px; right: calc(var(--sdColW) + 1.4vw);
+  top: calc(var(--navH) + var(--sdHeadH) + 1vh); bottom: calc(var(--barH) + 0.6vh);
+  z-index: 450; border: 2px solid #888; border-radius: 12px;
+}
+body.sdPersistent #srClose { display: none !important; }
+.tabs > .srTabBtn.active { background: #444; }
+#sdToast { position: fixed; left: 50%; top: 38%; transform: translateX(-50%); z-index: 100003; max-width: 70vw;
+  background: #3a0000; color: #fff; border: 2px solid #ff5050; border-radius: 10px; padding: 1.4vh 2vw;
+  font: bold 2.2vh Arial, sans-serif; text-align: center; display: none; }
+#sdToast.show { display: block; }
+
+/* OUTPUTS tab (SD Remote style) */
+#sdOutputs { height: 100%; }
+.soStrips { display: flex; justify-content: space-evenly; height: 100%; gap: 0.6vw; padding: 0.6vh 0; box-sizing: border-box; }
+.soStrip { flex: 0 1 9vw; max-width: 9vw; display: flex; flex-direction: column; align-items: stretch; gap: 0.6vh; background: #151515; border: 1px solid #333; border-radius: 8px; padding: 0.6vh 0.4vw; }
+.soTop { text-align: center; font: bold 1.9vh Arial, sans-serif; color: #ddd; background: #222; border-radius: 4px; padding: 0.4vh 0; }
+.soMeter { flex: 1 1 auto; position: relative; background: #000; border: 1px solid #333; border-radius: 3px; margin: 0 1.2vw; overflow: hidden; }
+.soFill { position: absolute; inset: 0; clip-path: inset(100% 0 0 0); background: linear-gradient(to top, #6fbf3a 0%, #6fbf3a 76%, #f0a030 76%, #f0a030 94%, #e02020 94%); }
+.soPeak { position: absolute; left: 0; right: 0; height: 2px; bottom: 0; background: #fff; }
+.soLevel { text-align: center; font: bold 1.9vh Arial, sans-serif; color: #fff; }
+.soSrc { text-align: center; font: 1.6vh Arial, sans-serif; color: #9cf; min-height: 2vh; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.soMute { height: 4.2vh; font: bold 1.7vh Arial, sans-serif; background: #000; color: #777; border: 2px solid #555; border-radius: 6px; }
+.soMute.muted { background: #d4a000; color: #000; border-color: #ffd23f; }
+.soOpen { height: 5.4vh; font: bold 1.9vh Arial, sans-serif; background: #000; color: #fff; border: 2px solid #777; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; }
+.soOpen small { font: 1.2vh Arial, sans-serif; color: #888; }
+.soOpen:active { background: #333; }
+#foWin {
+  display: none; position: fixed; z-index: 500; box-sizing: border-box;
+  left: 6px; right: calc(var(--sdColW) + 1.4vw);
+  top: calc(var(--navH) + var(--sdHeadH) + 1vh); bottom: calc(var(--barH) + 0.6vh);
+  background: #1a1a1a; border: 2px solid #888; border-radius: 12px; padding: 0.8vh 1vw;
+  flex-direction: column; gap: 0.8vh; color: #ddd; font-family: Arial, sans-serif;
+}
+#foWin.open { display: flex; }
+#foNote { font: 1.8vh Arial, sans-serif; color: #fc6; }
+.foBody { flex: 1 1 auto; display: flex; gap: 1.4vw; min-height: 0; overflow-y: auto; }
+.foSrcCol { flex: 1.4 1 0; }
+.foGrid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0.8vh 0.6vw; margin: 1vh 0; }
+.foGrid button { height: 5.4vh; font: bold 1.9vh Arial, sans-serif; background: #333; color: #ccc; border: 2px solid #555; border-radius: 7px; }
+.foGrid button.on { background: #3fbf6a; color: #000; border-color: #8ef0a8; }
+.foGroupLab { font: bold 1.6vh Arial, sans-serif; color: #9cf; margin-top: 0.8vh; }
+#foWin .foGrid { margin: 0.4vh 0; }
+#foWin .foGrid button { height: 4.8vh; }
+#fo_gHp { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+/* Keep labels (and their CL-9 badges) on one line; widen if needed. */
+.fcLab { flex: 0 0 auto !important; min-width: 6.5vw; white-space: nowrap; }
