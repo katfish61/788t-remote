@@ -13,6 +13,7 @@ All JS inlined
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <script>if('serviceWorker' in navigator && isSecureContext)navigator.serviceWorker.register('sw.js').catch(console.warn);</script>
+<script>window.APP_VERSION="v80";window.APP_BUILD_DATE="2026-11-28";</script>
 <script>(function(){var ok=true;try{new Function("class A{static x=1};var a=null;return a?.b??1;")();if(typeof WritableStream==="undefined")ok=false;}catch(e){ok=false;}
 if(ok)return;var m=/OS (\d+)_(\d+)/.exec(navigator.userAgent);var v=m?(" (this one is on iOS "+m[1]+"."+m[2]+")"):"";
 document.addEventListener("DOMContentLoaded",function(){var d=document.createElement("div");d.style.cssText="position:fixed;left:0;top:0;right:0;bottom:0;z-index:999999;background:#111;color:#fff;font:22px Arial,sans-serif;padding:8%;text-align:center";
@@ -764,7 +765,7 @@ body.sdPersistent #srClose { display: none !important; }
       tag.style.cssText = "position:fixed;top:2px;right:4px;z-index:20000;font:11px Arial;color:#8f8;opacity:.7;pointer-events:none";
       document.body.appendChild(tag);
     }
-    tag.textContent = mode === "ws" ? "Pi bridge (Wi-Fi)" : "USB";
+    tag.textContent = (mode === "ws" ? "Pi bridge (Wi-Fi)" : "USB") + (window.APP_VERSION ? " \u00b7 " + window.APP_VERSION : "");
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", updateLinkBadge);
   else updateLinkBadge();
@@ -3643,6 +3644,7 @@ z-index:50;
 ">
 788T Controller v0.3 "Maverick," 2026 Joe Origlieri <br> Feel free to modify this and use it however you want, I have no rights to any of it.<br>I feel the need!
 <br><br>Tablet (WebUSB), Raspberry Pi Wi-Fi bridge, SD Remote-style layout and Sound Report added by Keith Tunney, 2026.
+<br><b>788T Remote v80</b>, built 2026-11-28 &middot; github.com/katfish61/788t-remote
 </div>
 
           <div id="systemSettings" class="settingsPanel">

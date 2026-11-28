@@ -28,8 +28,15 @@ if(ok)return;var m=/OS (\\d+)_(\\d+)/.exec(navigator.userAgent);var v=m?(" (this
 document.addEventListener("DOMContentLoaded",function(){var d=document.createElement("div");d.style.cssText="position:fixed;left:0;top:0;right:0;bottom:0;z-index:999999;background:#111;color:#fff;font:22px Arial,sans-serif;padding:8%;text-align:center";
 d.innerHTML="<h2 style='color:#f80'>This browser is too old for 788T Remote</h2><p>It needs Safari on iOS / iPadOS 14.5 or later, or Chrome on Android"+v+".</p><p>Update the device in Settings, General, Software Update, or use another tablet or phone.</p>";document.body.appendChild(d);});})();</script>"""
 
+# App version: taken from the service worker's cache name (788t-app-vNN), so the
+# version shown in the app always matches the offline copy it runs from.
+import re as _re, datetime as _dt
+APP_VERSION = _re.search(r"788t-app-(v\d+)", read("sw.js")).group(1)
+BUILD_DATE = _dt.date.today().isoformat()
+
 inject = "\n".join([
     anchor,
+    f'<script>window.APP_VERSION="{APP_VERSION}";window.APP_BUILD_DATE="{BUILD_DATE}";</script>',
     OLD_BROWSER_CHECK,
     '<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">',
     '<meta name="mobile-web-app-capable" content="yes">',
@@ -199,6 +206,7 @@ patch("""    try {
 patch("""I have no rights to any of it.<br>I feel the need!
 """, """I have no rights to any of it.<br>I feel the need!
 <br><br>Tablet (WebUSB), Raspberry Pi Wi-Fi bridge, SD Remote-style layout and Sound Report added by Keith Tunney, 2026.
+<br><b>788T Remote """ + APP_VERSION + """</b>, built """ + BUILD_DATE + """ &middot; github.com/katfish61/788t-remote
 """, "credit line")
 
 # Playback HP mode (setting 149) is off by one in the original: it sent the mode

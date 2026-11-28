@@ -368,7 +368,7 @@
       tag.style.cssText = "position:fixed;top:2px;right:4px;z-index:20000;font:11px Arial;color:#8f8;opacity:.7;pointer-events:none";
       document.body.appendChild(tag);
     }
-    tag.textContent = mode === "ws" ? "Pi bridge (Wi-Fi)" : "USB";
+    tag.textContent = (mode === "ws" ? "Pi bridge (Wi-Fi)" : "USB") + (window.APP_VERSION ? " \u00b7 " + window.APP_VERSION : "");
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", updateLinkBadge);
   else updateLinkBadge();
