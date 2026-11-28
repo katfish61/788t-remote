@@ -15,6 +15,21 @@ Wi-Fi links, and the features below on top of it.
 > Not a Sound Devices product, and not affiliated with them. Free to use. Use it between takes with care, and
 > keep the 788T's own controls in reach.
 
+![788T Remote home screen on an iPad](images/home.jpg)
+
+## Screenshots
+
+| | |
+|---|---|
+| ![Fat channel: source, 48V, low cut, phase, limiter, delay, iso and EQ](images/fat-channel.jpg) | ![Routing grid: inputs to tracks, pre/post](images/routing.jpg) |
+| **Fat channel** (tap a channel letter) | **Routing** |
+| ![Outputs page with strips, meters, level and sources](images/outputs.jpg) | ![Sound Report](images/sound-report.jpg) |
+| **Outputs** | **Sound Report** |
+| ![Files: the 788T's take list with metadata](images/files.jpg) | |
+| **Files** | |
+
+All screenshots are from an iPad over Wi-Fi through the Pi bridge, connected to a real 788T.
+
 ## Features
 - **SD Remote-style layout:** top bar with Current / Next take (scene, take and notes edited in place),
   timecode, sample rate / bit depth / fps and A. Time; horizontal L/R meters; a transport column (Record, False take,
