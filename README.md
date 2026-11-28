@@ -32,6 +32,8 @@ Wi-Fi links, and the features below on top of it.
   both** (A4 landscape PDF made in the app; episode/scene/slate columns; daily-folder blocks).
 - Files list, recording settings (Record Media fixed: it's setting 74), timecode, headphone modes, system.
 - One app for USB and Wi-Fi (switch next to Connect); it works offline once installed.
+- **Phones:** a dedicated portrait layout (big timecode, transport row at the bottom, swipeable channel strips) and
+  larger text in landscape.
 
 ## Install: Android tablet, USB
 1. Open **https://katfish61.github.io/788t-remote/** in **Chrome** on the tablet, then ⋮ → **Install app**.

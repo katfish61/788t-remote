@@ -296,6 +296,102 @@ body.sdPersistent #srClose { display: none !important; }
 #fo_gHp { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 /* Keep labels (and their CL-9 badges) on one line; widen if needed. */
 .fcLab { flex: 0 0 auto !important; min-width: 6.5vw; white-space: nowrap; }
+
+/* ============================================================== PHONES
+   Portrait phones get their own layout (SD Remote phone style): big timecode
+   on top, Current / Next side by side, L/R, a horizontal transport row at the
+   bottom, sideways-scrolling channel strips, panels stacked in one column.
+   Landscape phones keep the tablet layout with text and buttons a size up. */
+
+@media (orientation: portrait) and (max-width: 760px) {
+  :root { --sdColW: 0px; --sdHeadH: 31vh; --sdTransH: 8.5vh; }
+  /* tabs scroll sideways */
+  .tabs { overflow-x: auto; flex-wrap: nowrap !important; justify-content: flex-start !important; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs > button { font-size: 2.2vh !important; flex: 0 0 auto !important; padding: 0.7vh 3vw !important; }
+  /* header: timecode full width, take cards below, L/R */
+  body.sdPersistent #sdHeader { margin: 0.4vh 6px 0.3vh; }
+  #sdTop { display: grid !important; grid-template-columns: 1fr 1fr; grid-template-rows: auto 1fr; gap: 0.6vh 2vw;
+    height: auto !important; flex: 1 1 auto !important; min-height: 0; }
+  #sdCentre { grid-column: 1 / 3; grid-row: 1; padding: 0; }
+  #sdCard0 { grid-column: 1; grid-row: 2; }
+  #sdCard1 { grid-column: 2; grid-row: 2; }
+  #sdCentre > #tc { font-size: min(13vw, 6.5vh) !important; }
+  #sdInfo > .livestat, #sdCentre > #liveATime { font-size: 1.6vh !important; }
+  .sdTakeCard { padding: 0.3vh 2vw; }
+  .sdCardRow > span { flex: 0 0 11vw; font-size: 1.5vh; }
+  .sdCardRow > input { height: 2.6vh; font-size: 1.7vh; }
+  #sdHeader > #sdMix { flex: 0 0 6vh; }
+  .sdMixLabel { flex-basis: 8vw; }
+  .sdMixScale { margin-left: calc(8vw + 0.5vw); }
+  /* transport: a row at the bottom, above the status bar */
+  body.sdPersistent > #transportButtons {
+    top: auto !important; left: 0; right: 0 !important; bottom: var(--barH);
+    width: auto !important; height: var(--sdTransH); flex-direction: row !important; justify-content: space-around;
+    padding: 0.4vh 2vw !important; background: #0d0d0d; border-top: 1px solid #333;
+  }
+  #transportButtons .sdSpacer { display: none; }
+  #transportButtons .sdRound { width: min(13vw, 7vh) !important; height: min(13vw, 7vh) !important; font-size: 3.4vh !important; }
+  #transportButtons > #recordButton { flex-grow: 0 !important; }
+  /* content area */
+  body.sdPersistent .tab { margin-right: 0 !important;
+    height: calc(100vh - var(--navH) - var(--sdHeadH) - 1vh - var(--barH) - var(--sdTransH)) !important; }
+  /* channel strips: swipe sideways */
+  #home.sdLayout #meterView .meterBankChannels { overflow-x: auto; justify-content: flex-start !important; gap: 1.5vw; -webkit-overflow-scrolling: touch; }
+  #home.sdLayout #meterView .channel { flex: 0 0 18vw !important; max-width: none !important; }
+  #meterView .meterBankLabel { display: none !important; }
+  .channel > .sdTrackName { font-size: 1.6vh; }
+  .channel > .armButton, .channel > .muteButton { font-size: 1.6vh !important; height: 4.5% !important; }
+  /* panels over the content: full width, one column, scroll */
+  #fcWin, #foWin, body.sdPersistent #srPanel { right: 6px !important; bottom: calc(var(--barH) + var(--sdTransH) + 0.6vh) !important;
+    top: calc(var(--navH) + var(--sdHeadH) + 0.6vh) !important; }
+  .fcMain, .foBody { flex-direction: column !important; }
+  .fcLab { min-width: 18vw; font-size: 1.7vh; }
+  .fcVal { flex-basis: 14vw; font-size: 1.7vh; }
+  .fcTabs { flex-wrap: wrap; }
+  .fcTabs button { flex: 1 0 14%; }
+  .foGrid { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+  #fcCurve { height: 10vh; }
+  /* routing grid and outputs: tighter */
+  #rtGrid { grid-template-columns: 9vw repeat(12, minmax(0, 1fr)) !important; gap: 0.5vh 0.6vw; }
+  .rtCell { height: 4.6vh; font-size: 1.1vh; }
+  .rtHead, .rtRowHead { font-size: 1.5vh; }
+  .soStrip { flex: 1 1 0 !important; max-width: none !important; padding: 0.4vh 0.6vw; }
+  .soMeter { margin: 0 2vw; }
+  .soTop, .soLevel, .soOpen { font-size: 1.5vh; }
+  .soSrc { font-size: 1.3vh; }
+  /* status bar: essentials only */
+  .multiUnitControl, .settingsTargetControl { display: none !important; }
+  .statusbar #unitTempDisplay { font-size: 1.7vh !important; }
+  .mediaStatusItem { font-size: 1.6vh !important; }
+  #statusText { display: none !important; }   /* failures pop up mid-screen instead */
+  .statusbar { justify-content: space-between !important; gap: 1.5vw; padding: 0 2vw !important; box-sizing: border-box; }
+  .mediaStatusGroup { gap: 1.5vw !important; font-size: 1.6vh !important; }
+  .mediaStatusItem { min-width: 0 !important; }
+  .connect-button { min-width: 0 !important; padding: 0.5vh 1.6vw !important; min-height: 4vh !important; font-size: 1.4vh !important; letter-spacing: -0.02em; }
+  #unitTempDisplay { white-space: nowrap; }
+  .connectStatusGroup { gap: 1.5vw !important; max-width: none !important; }
+  #linkSwitch button { font-size: 1.5vh; padding: 0.5vh 2vw; }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .multiUnitControl, .settingsTargetControl, #meterView .meterBankLabel { display: none !important; }
+  .sdCardTitle { font-size: 2vh; }
+  .sdCardRow > span { font-size: 2.6vh; }
+  .sdCardRow > input { height: 3.6vh; font-size: 2.8vh; }
+  #sdInfo > .livestat, #sdCentre > #liveATime { font-size: 2.6vh !important; }
+  .sdMixScale { font-size: 2vh; }
+  .sdMixLabel { font-size: 2.4vh; }
+  .channel > .sdTrackName { font-size: 2.4vh; height: 4.4vh; }
+  .channel > .armButton, .channel > .muteButton { font-size: 2.4vh !important; }
+  .statusbar #unitTempDisplay, .mediaStatusItem { font-size: 2.6vh !important; }
+  #statusText { font-size: 2.2vh; }
+  #linkSwitch button, #connectBtn { font-size: 2.4vh !important; }
+  .fcLab, .fcVal, .fcHint, .eqKnobLab { font-size: 2.4vh; }
+  .fcText { font-size: 2.6vh; }
+  .rtHead, .rtRowHead { font-size: 2.6vh; }
+  .soTop, .soLevel, .soOpen, .soSrc { font-size: 2.4vh; }
+}
 </style>
 <script>
 /*
